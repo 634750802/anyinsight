@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import analyzeStarsHistoryTemplate, { getAnalyzeStarsHistory } from '@/chart-templates/analyze-stars-history';
-import echarts from 'echarts';
+import * as echarts from 'echarts';
 import { buildOptions } from '@/components/Chart';
 
-export default async function (
+const handler = async function (
   req: NextApiRequest,
   res: NextApiResponse<string>,
 ) {
+
+  console.log(req.query.repoId)
   const id = parseInt(String(req.query.repoId));
   const resp = await getAnalyzeStarsHistory(id);
   const template = analyzeStarsHistoryTemplate(resp);
@@ -25,5 +27,7 @@ export default async function (
 
   const svg = ec.renderToSVGString();
 
-  res.status(200).setHeader('content-type', 'image/xml+svg').send(svg);
+  res.status(200).setHeader('content-type', 'image/svg+xml').send(svg);
 }
+
+export default handler;

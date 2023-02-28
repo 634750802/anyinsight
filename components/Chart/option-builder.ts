@@ -16,6 +16,6 @@ export type ChartOptionTemplate<T> = (data: T) => WatchSource<any>[];
 
 export function buildOptions (ec: echarts.EChartsType, sources: WatchSource<any>[]): void {
   for (const [deps, fn, opts] of sources) {
-    ec.setOption(fn(deps), opts);
+    ec.setOption(fn(...deps), opts);
   }
 }
