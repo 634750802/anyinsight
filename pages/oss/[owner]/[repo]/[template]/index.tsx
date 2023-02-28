@@ -53,8 +53,8 @@ const Page = ({ title, data, description, owner, repo, template, repoId }: IPage
         <meta name="description" content={description} />
         <meta name="twitter:description" content={description} />
         <meta name="og:description" content={description} />
-        <meta name="twitter:image" content={`${HOST}/api/charts/oss/${owner}/${repo}/${template}.png`} />
-        <meta name="og:image" content={`${HOST}/api/charts/oss/${owner}/${repo}/${template}.png`} />
+        <meta name="twitter:image" content={`${HOST}/api/charts/oss/${owner}/${repo}/${template}?type=png`} />
+        <meta name="og:image" content={`${HOST}/api/charts/oss/${owner}/${repo}/${template}?type=png`} />
       </Head>
       <EChartsThemeProvider value={{ theme: 'ossinsight' }}>
         <TemplateEChart template={template} query={{ repoId }} data={data} name={`${owner}/${repo}`} style={{ height: '300px' }} />
