@@ -8,11 +8,11 @@ export function once (options: echarts.EChartsOption, opts?: SetOptionOpts): Wat
   return [[], () => options, opts];
 }
 
-export function watch<T extends any[]> (values: T, cb: (...args: T) => echarts.EChartsOption, opts?: SetOptionOpts): WatchSource<T> {
+export function watch<T extends any[]> (values: [...T], cb: (...args: T) => echarts.EChartsOption, opts?: SetOptionOpts): WatchSource<T> {
   return [values, cb, opts];
 }
 
-export type ChartOptionTemplate<T> = (data: T) => WatchSource<any>[];
+export type ChartOptionTemplate<T extends any[]> = (...data: T) => WatchSource<any>[];
 
 export function buildOptions (ec: echarts.EChartsType, sources: WatchSource<any>[]): void {
   for (const [deps, fn, opts] of sources) {

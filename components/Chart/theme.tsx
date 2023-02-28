@@ -4,7 +4,7 @@ export interface EChartsThemeValues {
   theme?: string;
 }
 
-export const EChartsThemeContext = createContext({
+export const EChartsThemeContext = createContext<EChartsThemeValues>({
   theme: undefined,
 });
 

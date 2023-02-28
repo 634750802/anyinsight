@@ -6,12 +6,9 @@ import { WatchSource } from '@/components/Chart/option-builder';
 
 export interface EchartsProps<I extends WatchSource<any>[]> extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   children: I;
-  // true: og:image
-  // ['foo', 'bar']: <meta name="foo" ...> <meta name="bar" ...>
-  request?: NextRequest;
 }
 
-export default function ECharts<I extends WatchSource<any>[]> ({ children, request, ...props }: EchartsProps<I>) {
+export default function ECharts<I extends WatchSource<any>[]> ({ children, ...props }: EchartsProps<I>) {
   const elRef = useRef<HTMLDivElement>(null);
   const ecRef = useRef<echarts.EChartsType>();
 

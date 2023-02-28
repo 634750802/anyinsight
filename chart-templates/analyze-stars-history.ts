@@ -8,7 +8,7 @@ export type AnalyzeStarsHistoryResponse = {
   }[];
 }
 
-export async function getAnalyzeStarsHistory (repoId: number): Promise<AnalyzeStarsHistoryResponse> {
+export async function getData ({ repoId }: { repoId: any }): Promise<AnalyzeStarsHistoryResponse> {
   const resp = await fetch(`https://api.ossinsight.io/q/analyze-stars-history?repoId=${repoId}`);
   if (resp.ok) {
     return await resp.json();
@@ -17,7 +17,7 @@ export async function getAnalyzeStarsHistory (repoId: number): Promise<AnalyzeSt
   }
 }
 
-const analyzeStarsHistoryTemplate: ChartOptionTemplate<AnalyzeStarsHistoryResponse> = (data) => {
+export const template: ChartOptionTemplate<[AnalyzeStarsHistoryResponse, string]> = (data, repo) => {
   return [
     once({
       grid: {},
@@ -52,13 +52,17 @@ const analyzeStarsHistoryTemplate: ChartOptionTemplate<AnalyzeStarsHistoryRespon
         source: [],
       },
     }),
-    watch([data], data => ({
+    watch([data, repo], (data, repo) => ({
       dataset: {
         id: 'main',
         source: data.data,
+      },
+      title: {
+        text: `Star history of ${repo}`,
       },
     })),
   ];
 };
 
-export default analyzeStarsHistoryTemplate;
+export const title = (name: string) => `Star history of ${name} from ossinsight.io`;
+export const description = (name: string) => `Star history of ${name} from ossinsight.io`;
