@@ -98,11 +98,12 @@ export default function ECharts<I extends WatchSource<any>[]> ({ children, reque
 }
 
 function renderMeta (ssrMeta: boolean | string[], ssrContent: string): ReactElement {
+  const content = 'data:image/svg+xml;utf8, ' + ssrContent;
   if (typeof ssrMeta === 'boolean') {
     if (ssrMeta) {
       return (
         <Head>
-          <meta name="og:image" content={'data:image/svg;base64,' + btoa(ssrContent)} />
+          <meta name="og:image" content={content} />
         </Head>
       );
     } else {
@@ -110,11 +111,10 @@ function renderMeta (ssrMeta: boolean | string[], ssrContent: string): ReactElem
     }
   } else {
     if (ssrMeta.length > 0) {
-      const b64Content = 'data:image/svg;base64,' + btoa(ssrContent);
       return (
         <Head>
           {ssrMeta.map(name => (
-            <meta key={name} name={name} content={b64Content} />
+            <meta key={name} name={name} content={content} />
           ))}
         </Head>
       );
