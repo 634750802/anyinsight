@@ -1,17 +1,13 @@
-import ECharts, { once, watch } from '@/components/Chart/ECharts';
+import ECharts from '@/components/Chart';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import analyzeStarsHistoryTemplate, { AnalyzeStarsHistoryResponse, getAnalyzeStarsHistory } from '@/chart-templates/analyze-stars-history';
 
 interface IPageData {
   owner: string;
   repo: string;
-  data: {
-    data: {
-      event_month: string
-      repo_id: number
-      total: number
-    }[];
-  };
+  repoId: number;
+  data: AnalyzeStarsHistoryResponse;
 }
 
 const resolveRepoId = async (owner: string, repo: string) => {
@@ -20,7 +16,7 @@ const resolveRepoId = async (owner: string, repo: string) => {
   if (resp.ok) {
     const id = (await resp.json()).data.id;
     console.log('resolved %d', id);
-    return id;
+    return parseInt(id);
   } else {
     console.log(await resp.text());
     throw new Error(resp.statusText);
@@ -29,80 +25,34 @@ const resolveRepoId = async (owner: string, repo: string) => {
 
 export const getServerSideProps: GetServerSideProps<IPageData, { owner: string, repo: string }> = async (context) => {
   const { owner, repo } = context.params!;
-
   const repoId = await resolveRepoId(owner, repo);
 
-  const resp = await fetch(`https://api.ossinsight.io/q/analyze-stars-history?repoId=${repoId}`);
-
-  if (resp.ok) {
-    return {
-      props: {
-        owner,
-        repo,
-        data: await resp.json(),
-      },
-    };
-  } else {
-    console.error(await resp.text());
-    throw new Error(resp.statusText);
-  }
+  return {
+    props: {
+      owner,
+      repo,
+      repoId,
+      data: await getAnalyzeStarsHistory(repoId),
+    },
+  };
 };
 
-const Page = ({ data, owner, repo }: IPageData) => {
+const Page = ({ data, owner, repo, repoId }: IPageData) => {
   return (
     <>
       <Head>
         <title>
           {`Star History for ${owner}/${repo}`}
         </title>
-        <meta name="description" content="Star history from OSSInsight"/>
+        <meta name="description" content="Star history from OSSInsight" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="anyscript.io" />
         <meta name="twitter:title" content={`Star History for ${owner}/${repo}`} />
-        <meta name="twitter:description" content="Star history from OSSInsight"/>
+        <meta name="twitter:description" content="Star history from OSSInsight" />
+        <meta name="twitter:image" content={`/api/charts/analyze-stars-history?id=${repoId}`} />
       </Head>
-      <ECharts style={{ height: 300 }} ssrMeta={['og:image', 'twitter:image']}>
-        {[
-          once({
-            grid: {},
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {},
-            },
-            legend: {},
-            title: {
-              text: 'Star history',
-            },
-            series: {
-              type: 'line',
-              datasetId: 'main',
-              encode: {
-                x: 'event_month',
-                y: 'total',
-              },
-              itemStyle: {
-                borderWidth: 0,
-              },
-              symbolSize: 0,
-            },
-            yAxis: {
-              type: 'value',
-            },
-            xAxis: {
-              type: 'time',
-            },
-            dataset: {
-              id: 'main',
-              source: [],
-            },
-          }),
-          watch([data], data => ({
-            dataset: {
-              id: 'main',
-              source: data.data,
-            },
-          })),
-        ]}
+      <ECharts style={{ height: 300 }}>
+        {analyzeStarsHistoryTemplate(data)}
       </ECharts>
     </>
   );
