@@ -51,8 +51,8 @@ const Page = ({ data, owner, repo, repoId }: IPageData) => {
         <meta name="og:title" content={`Star History for ${owner}/${repo}`} />
         <meta name="twitter:description" content="Star history from OSSInsight" />
         <meta name="og:description" content="Star history from OSSInsight" />
-        <meta name="twitter:image" content={`${HOST}/api/charts/analyze-stars-history.svg?repoId=${repoId}`} />
-        <meta name="og:image" content={`${HOST}/api/charts/analyze-stars-history.svg?repoId=${repoId}`} />
+        <meta name="twitter:image" content={`${HOST}/api/charts/analyze-stars-history.png?repoId=${repoId}`} />
+        <meta name="og:image" content={`${HOST}/api/charts/analyze-stars-history.png?repoId=${repoId}`} />
       </Head>
       <ECharts style={{ height: 300 }}>
         {analyzeStarsHistoryTemplate(data)}
