@@ -7,7 +7,7 @@ const handler = async function (
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { owner, template: templateName, type = 'svg' } = req.query;
+  const { owner, repo: templateName, type = 'svg' } = req.query;
   const { template: makeSources, getData } = await templates[String(templateName)]();
   const userId = await resolveUserId(String(owner));
 

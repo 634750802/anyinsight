@@ -18,11 +18,11 @@ interface IPageData {
 
 interface IParams extends ParsedUrlQuery {
   owner: string;
-  template: string;
+  repo: string;
 }
 
 export const getServerSideProps: GetServerSideProps<IPageData, IParams> = async (context) => {
-  const { owner, template } = context.params!;
+  const { owner, repo: template } = context.params!;
   const userId = await resolveUserId(owner);
   const name = `${owner}`;
   const chartTemplate = await templates[template]();
