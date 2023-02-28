@@ -49,7 +49,7 @@ const Page = ({ data, owner, repo, repoId }: IPageData) => {
         <meta name="twitter:site" content="anyscript.io" />
         <meta name="twitter:title" content={`Star History for ${owner}/${repo}`} />
         <meta name="twitter:description" content="Star history from OSSInsight" />
-        <meta name="twitter:image" content={`/api/charts/analyze-stars-history.svg?repoId=${repoId}`} />
+        <meta name="twitter:image" content={`${HOST}/api/charts/analyze-stars-history.svg?repoId=${repoId}`} />
       </Head>
       <ECharts style={{ height: 300 }}>
         {analyzeStarsHistoryTemplate(data)}
@@ -57,5 +57,7 @@ const Page = ({ data, owner, repo, repoId }: IPageData) => {
     </>
   );
 };
+
+const HOST = process.env.VERCEL_URL ? `https://` + process.env.VERCEL_URL : 'http://localhost:3000';
 
 export default Page;
