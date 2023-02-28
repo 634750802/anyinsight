@@ -13,6 +13,7 @@ interface IPageData {
   repoId: number;
   title: string;
   description: string;
+  data: any;
 }
 
 interface IParams extends ParsedUrlQuery {
@@ -36,11 +37,12 @@ export const getServerSideProps: GetServerSideProps<IPageData, IParams> = async 
       repoId,
       title: getTemplateValue(chartTemplate.title, name),
       description: getTemplateValue(chartTemplate.description, name),
+      data: await chartTemplate.getData({ repoId }),
     },
   };
 };
 
-const Page = ({ title, description, owner, repo, template, repoId }: IPageData) => {
+const Page = ({ title, data, description, owner, repo, template, repoId }: IPageData) => {
   return (
     <>
       <Head>
@@ -55,7 +57,7 @@ const Page = ({ title, description, owner, repo, template, repoId }: IPageData) 
         <meta name="og:image" content={`${HOST}/api/charts/oss/${owner}/${repo}/${template}.png`} />
       </Head>
       <EChartsThemeProvider value={{ theme: 'ossinsight' }}>
-        <TemplateEChart template={template} query={{ repoId }} name={`${owner}/${repo}`} style={{ height: '300px' }} />
+        <TemplateEChart template={template} query={{ repoId }} data={data} name={`${owner}/${repo}`} style={{ height: '300px' }} />
       </EChartsThemeProvider>
     </>
   );
