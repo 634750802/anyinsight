@@ -3,17 +3,18 @@ import templates, { OSSTemplateModule } from '@/chart-templates';
 import ECharts, { EchartsProps } from './ECharts';
 
 export interface TemplateEChartProps extends Omit<EchartsProps<any>, 'children'> {
+  category: string;
   template: string;
   query: any;
   name: string;
   data: any;
 }
 
-export const TemplateEChart = ({ template, query, data, name, ...props }: TemplateEChartProps) => {
+export const TemplateEChart = ({ category, template, query, data, name, ...props }: TemplateEChartProps) => {
   const [tmpl, setTmpl] = useState<OSSTemplateModule<any>>();
 
   useEffect(() => {
-    templates[template]().then(module => setTmpl(module)).catch(console.error);
+    templates[category][template]().then(module => setTmpl(module)).catch(console.error);
   }, [template]);
 
   if (tmpl && data) {

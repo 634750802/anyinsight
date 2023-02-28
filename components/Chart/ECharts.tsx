@@ -1,7 +1,6 @@
 import * as echarts from 'echarts';
 import { HTMLAttributes, useContext, useEffect, useRef } from 'react';
 import { EChartsThemeContext } from './theme';
-import { NextRequest } from 'next/server';
 import { WatchSource } from '@/components/Chart/option-builder';
 
 export interface EchartsProps<I extends WatchSource<any>[]> extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {

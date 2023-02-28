@@ -1,18 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { renderPng, renderSvg } from '@/lib/echarts.ssr';
-import { resolveRepoId } from '@/lib/oss';
-import templates from '@/chart-templates/oss';
+import templates from '@/chart-templates/oss-user';
+import { resolveUserId } from '@/lib/oss';
 
 const handler = async function (
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { owner, repo, template: templateName, type = 'svg' } = req.query;
-  const repoId = await resolveRepoId(String(owner), String(repo));
+  const { owner, template: templateName, type = 'svg' } = req.query;
   const { template: makeSources, getData } = await templates[String(templateName)]();
+  const userId = await resolveUserId(String(owner));
 
-  const data = await getData({ repoId });
-  const template = makeSources(data, `${owner}/${repo}`);
+  const data = await getData({ userId });
+  const template = makeSources(data, String(owner));
 
   if (type === 'png') {
     const buffer = renderPng(template, {

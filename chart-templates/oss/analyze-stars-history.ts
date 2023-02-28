@@ -1,6 +1,7 @@
 import { ChartOptionTemplate, once, watch } from '@/components/Chart';
+import { ossinsightQuery } from '@/lib/oss';
 
-export type AnalyzeStarsHistoryResponse = {
+type Data = {
   data: {
     event_month: string
     repo_id: number
@@ -8,16 +9,11 @@ export type AnalyzeStarsHistoryResponse = {
   }[];
 }
 
-export async function getData ({ repoId }: { repoId: any }): Promise<AnalyzeStarsHistoryResponse> {
-  const resp = await fetch(`https://api.ossinsight.io/q/analyze-stars-history?repoId=${repoId}`);
-  if (resp.ok) {
-    return await resp.json();
-  } else {
-    throw new Error(resp.statusText);
-  }
+export async function getData (params: Record<string, any>): Promise<Data> {
+  return ossinsightQuery('analyze-stars-history', params);
 }
 
-export const template: ChartOptionTemplate<[AnalyzeStarsHistoryResponse, string]> = (data, repo) => {
+export const template: ChartOptionTemplate<[Data, string]> = (data, repo) => {
   return [
     once({
       grid: {},

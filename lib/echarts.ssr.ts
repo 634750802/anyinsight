@@ -1,8 +1,8 @@
 import { buildOptions, WatchSource } from '@/components/Chart';
 import * as echarts from 'echarts';
+import { EChartsOption } from 'echarts';
 import { createCanvas } from '@napi-rs/canvas';
 import '@/chart-themes/ossinsight';
-import { EChartsOption } from 'echarts';
 
 const devicePixelRatio = 2;
 
@@ -44,7 +44,7 @@ export function renderPng (sources: WatchSource<any>[], { width, height, theme }
     },
     toolbox: {
       show: false,
-    }
-  })
+    },
+  });
   return canvas.toBuffer('image/png');
 }
