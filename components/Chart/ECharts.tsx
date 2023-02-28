@@ -78,48 +78,23 @@ export default function ECharts<I extends WatchSource<any>[]> ({ children, reque
     }, deps);
   }
 
-
   if (browser) {
     return (
-      <div ref={elRef} {...props} />
+      <div ref={elRef} suppressHydrationWarning={true} {...props} dangerouslySetInnerHTML={{ __html: '' }} />
     );
   } else {
     let ssrContent = ecRef.current?.renderToSVGString() ?? '';
     ecRef.current?.setOption({
       animation: false,
-    })
+    });
+    if (ssrContent) {
+      ssrContent = `<div style="display: none;">${ssrContent}</div>`
+    }
     return (
       <>
-        {renderMeta(ssrMeta, ssrContent)}
-        <div ref={elRef} {...props} />
+        {/*{renderMeta(ssrMeta, ssrContent)}*/}
+        <div ref={elRef} suppressHydrationWarning={true} {...props} dangerouslySetInnerHTML={{ __html: ssrContent }} />
       </>
     );
-  }
-}
-
-function renderMeta (ssrMeta: boolean | string[], ssrContent: string): ReactElement {
-  const content = 'data:image/svg+xml;utf8, ' + ssrContent;
-  if (typeof ssrMeta === 'boolean') {
-    if (ssrMeta) {
-      return (
-        <Head>
-          <meta name="og:image" content={content} />
-        </Head>
-      );
-    } else {
-      return <></>;
-    }
-  } else {
-    if (ssrMeta.length > 0) {
-      return (
-        <Head>
-          {ssrMeta.map(name => (
-            <meta key={name} name={name} content={content} />
-          ))}
-        </Head>
-      );
-    } else {
-      return <></>;
-    }
   }
 }
