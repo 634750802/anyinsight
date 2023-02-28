@@ -49,7 +49,7 @@ const Page = ({ data, owner, repo, repoId }: IPageData) => {
         <meta name="twitter:site" content="anyscript.io" />
         <meta name="twitter:title" content={`Star History for ${owner}/${repo}`} />
         <meta name="twitter:description" content="Star history from OSSInsight" />
-        <meta name="twitter:image" content={`/api/charts/analyze-stars-history?id=${repoId}`} />
+        <meta name="twitter:image" content={`/api/charts/analyze-stars-history.svg?id=${repoId}`} />
       </Head>
       <ECharts style={{ height: 300 }}>
         {analyzeStarsHistoryTemplate(data)}
