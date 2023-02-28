@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import analyzeStarsHistoryTemplate, { getAnalyzeStarsHistory } from '@/chart-templates/analyze-stars-history';
 import * as echarts from 'echarts';
 import { buildOptions } from '@/components/Chart';
-import { createCanvas } from 'canvas'
+import { createCanvas } from '@napi-rs/canvas'
 
 
 const handler = async function (
@@ -26,7 +26,7 @@ const handler = async function (
     animation: false,
   });
 
-  res.status(200).setHeader('content-type', 'image/png').send(canvas.toBuffer());
+  res.status(200).setHeader('content-type', 'image/png').send(canvas.toBuffer('image/png'));
 }
 
 export default handler;
