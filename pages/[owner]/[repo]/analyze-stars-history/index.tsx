@@ -1,7 +1,10 @@
 import ECharts, { once, watch } from '@/components/Chart/ECharts';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 interface IPageData {
+  owner: string;
+  repo: string;
   data: {
     data: {
       event_month: string
@@ -34,6 +37,8 @@ export const getServerSideProps: GetServerSideProps<IPageData, { owner: string, 
   if (resp.ok) {
     return {
       props: {
+        owner,
+        repo,
         data: await resp.json(),
       },
     };
@@ -43,51 +48,63 @@ export const getServerSideProps: GetServerSideProps<IPageData, { owner: string, 
   }
 };
 
-const Page = ({ data }: IPageData) => {
+const Page = ({ data, owner, repo }: IPageData) => {
   return (
-    <ECharts style={{ height: 300 }} ssrMeta>
-      {[
-        once({
-          grid: {},
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {},
-          },
-          legend: {},
-          title: {
-            text: 'Star history',
-          },
-          series: {
-            type: 'line',
-            datasetId: 'main',
-            encode: {
-              x: 'event_month',
-              y: 'total',
+    <>
+      <Head>
+        <title>
+          {`Star History for ${owner}/${repo}`}
+        </title>
+        <meta name="description" content="Star history from OSSInsight"/>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="anyscript.io" />
+        <meta name="twitter:title" content={`Star History for ${owner}/${repo}`} />
+        <meta name="twitter:description" content="Star history from OSSInsight"/>
+      </Head>
+      <ECharts style={{ height: 300 }} ssrMeta={['og:image', 'twitter:image']}>
+        {[
+          once({
+            grid: {},
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {},
             },
-            itemStyle: {
-              borderWidth: 0,
+            legend: {},
+            title: {
+              text: 'Star history',
             },
-            symbolSize: 0,
-          },
-          yAxis: {
-            type: 'value',
-          },
-          xAxis: {
-            type: 'time',
-          },
-          dataset: {
-            id: 'main',
-            source: [],
-          },
-        }),
-        watch([data], data => ({
-          dataset: {
-            id: 'main',
-            source: (console.log('hi', data, data.data), data.data),
-          },
-        })),
-      ]}
-    </ECharts>
+            series: {
+              type: 'line',
+              datasetId: 'main',
+              encode: {
+                x: 'event_month',
+                y: 'total',
+              },
+              itemStyle: {
+                borderWidth: 0,
+              },
+              symbolSize: 0,
+            },
+            yAxis: {
+              type: 'value',
+            },
+            xAxis: {
+              type: 'time',
+            },
+            dataset: {
+              id: 'main',
+              source: [],
+            },
+          }),
+          watch([data], data => ({
+            dataset: {
+              id: 'main',
+              source: data.data,
+            },
+          })),
+        ]}
+      </ECharts>
+    </>
   );
 };
 
